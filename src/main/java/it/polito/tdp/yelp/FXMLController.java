@@ -5,8 +5,11 @@
 package it.polito.tdp.yelp;
 
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.yelp.model.Business;
 import it.polito.tdp.yelp.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,32 +38,62 @@ public class FXMLController {
     private Button btnPercorso; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbCitta"
-    private ComboBox<?> cmbCitta; // Value injected by FXMLLoader
+    private ComboBox<String> cmbCitta; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtX"
     private TextField txtX; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbAnno"
-    private ComboBox<?> cmbAnno; // Value injected by FXMLLoader
+    private ComboBox<Integer> cmbAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbLocale"
-    private ComboBox<?> cmbLocale; // Value injected by FXMLLoader
+    private ComboBox<Business> cmbLocale; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
 
     @FXML
     void doCalcolaPercorso(ActionEvent event) {
+    	Business b= this.cmbLocale.getValue();
+    	double x= Double.parseDouble(this.txtX.getText());
+    	String s="";
+    	List<Business> business= new LinkedList<>(this.model.percorsoBest(b, x));
+    	for(Business bi: business) {
+    		s+= bi+"\n";
+    	}
+    	this.txtResult.appendText(s);
+    	
     	
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
 
+    	this.txtResult.clear();
+    	int year= this.cmbAnno.getValue();
+    	String city= this.cmbCitta.getValue();
+    	this.model.creaGrafo(city, year);
+
+    	this.cmbLocale.getItems().addAll(this.model.getBusinessCity(city));
+    	
+    	
+    	
+    	this.txtResult.appendText( this.model.nVertici());
+    	this.txtResult.appendText( this.model.nArchi());
+    	
+
     }
 
     @FXML
     void doLocaleMigliore(ActionEvent event) {
+    	
+    	this.txtResult.clear();
+    	int year= this.cmbAnno.getValue();
+    	String city= this.cmbCitta.getValue();
+    	
+    
+    	Business b=this.model.bestLocale();
+    	this.txtResult.appendText("LOCALE MIGLIORE: "+b.toString());
 
     }
 
@@ -78,5 +111,18 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	
+    	for(int i=2005; i<2014; i++) {
+    		this.cmbAnno.getItems().add(i);
+    	}
+    	
+    	for(Business b : this.model.getAllBusiness()) {
+    		if(!this.cmbCitta.getItems().contains(b.getCity()))
+    			this.cmbCitta.getItems().add(b.getCity());
+    	
+    	}
+    	
+  
+    	
     }
 }

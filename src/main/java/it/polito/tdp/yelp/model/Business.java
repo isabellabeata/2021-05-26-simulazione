@@ -1,6 +1,11 @@
 package it.polito.tdp.yelp.model;
 
 public class Business {
+	@Override
+	public String toString() {
+		return this.businessName ;
+	}
+
 	private String businessId;
 	private String fullAddress;
 	private String active;
@@ -14,7 +19,27 @@ public class Business {
 	private String state;
 	private double stars;
 	
+	private double media;
 	
+	private double diff;
+	
+	
+	public double getDiff() {
+		return diff;
+	}
+
+	public void setDiff(double diff) {
+		this.diff = diff;
+	}
+
+	public double getMedia() {
+		return media;
+	}
+
+	public void setMedia(double media) {
+		this.media = media;
+	}
+
 	public Business(String businessId, String fullAddress, String active, String categories, String city, int reviewCount,
 			String businessName, String neighborhoods, double latitude, double longitude, String state, double stars) {
 		super();

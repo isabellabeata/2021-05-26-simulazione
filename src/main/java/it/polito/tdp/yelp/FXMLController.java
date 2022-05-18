@@ -54,10 +54,12 @@ public class FXMLController {
 
     @FXML
     void doCalcolaPercorso(ActionEvent event) {
+    	this.txtResult.clear();
     	Business b= this.cmbLocale.getValue();
     	double x= Double.parseDouble(this.txtX.getText());
     	String s="";
-    	List<Business> business= new LinkedList<>(this.model.percorsoBest(b, x));
+    	Business best= this.model.bestLocale();
+    	List<Business> business= new LinkedList<>(this.model.percorsoBest(b,best, x));
     	for(Business bi: business) {
     		s+= bi+"\n";
     	}
@@ -74,12 +76,12 @@ public class FXMLController {
     	String city= this.cmbCitta.getValue();
     	this.model.creaGrafo(city, year);
 
-    	this.cmbLocale.getItems().addAll(this.model.getBusinessCity(city));
+    	this.cmbLocale.getItems().addAll(this.model.getVertex(city, year));
     	
     	
     	
     	this.txtResult.appendText( this.model.nVertici());
-    	this.txtResult.appendText( this.model.nArchi());
+    	this.txtResult.appendText( this.model.nArchi()+"\n");
     	
 
     }

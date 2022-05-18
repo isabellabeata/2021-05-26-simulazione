@@ -159,10 +159,12 @@ public class YelpDao {
 		}
 	}
 	
-	public List<Business> getBusinessCity(String city){
-		String sql="SELECT * "
-				+ "FROM business b "
-				+ "WHERE b.city=?";
+public List<Business> getVertex (String city, int year) {
+		
+		String sql="SELECT b.* "
+				+ "FROM business b, reviews re "
+				+ "WHERE b.city=? AND  b.business_id=re.business_id AND YEAR(re.review_date)=? "
+				+ "GROUP BY b.business_id";
 		List<Business> result = new ArrayList<Business>();
 		
 		
@@ -171,6 +173,7 @@ public class YelpDao {
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setString(1, city);
+			st.setInt(2, year);
 			ResultSet res = st.executeQuery();
 			while (res.next()) {
 
@@ -197,7 +200,6 @@ public class YelpDao {
 			e.printStackTrace();
 			return null;
 		}
-				
 	}
 	
 	

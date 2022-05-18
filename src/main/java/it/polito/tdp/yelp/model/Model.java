@@ -100,38 +100,39 @@ public class Model {
 		return "#archi: "+ this.grafo.edgeSet().size()+"\n";
 	}
 	
-	public List<Business> getBusinessCity(String city){
-		return this.dao.getBusinessCity(city);
+	public List<Business> getVertex(String city, int year){
+		return this.dao.getVertex(city, year);
 	}
 	
-	public List<Business> percorsoBest(Business b, double x) {
+	public List<Business> percorsoBest(Business partenza, Business arrivo,  double x) {
 		
 		List<Business> parziale= new ArrayList<>();
-		this.bestPercorso= new ArrayList<Business>();
-		parziale.add(b);
-		bestPercorso.add(b);
-		cerca_ricorsiva(parziale,b,x);
+		parziale.add(partenza);
+		cerca_ricorsiva(parziale,arrivo,x);
 		
 		return bestPercorso;
  
 	}
 
-	private void cerca_ricorsiva(List<Business> parziale, Business b, double x) {
-		int lunghezzaP=1;
-		if(parziale.get(parziale.size()-1).equals(this.bestLocale())){
-			if(parziale.size()<lunghezzaP) {
-				lunghezzaP=parziale.size();
+	private void cerca_ricorsiva(List<Business> parziale, Business arrivo, double x) {
+		Business ultimo=parziale.get(parziale.size()-1);
+		if(ultimo.equals(arrivo)){
+			
+			if(bestPercorso==null) {
+				bestPercorso= new ArrayList<Business> (parziale);
+			}
+			if(parziale.size()<bestPercorso.size()) {
 				bestPercorso=new ArrayList<Business>(parziale);
 		}
 	}
 		//Graphs.successorListOf(this.grafo, b)
 		
-			for(DefaultWeightedEdge e: this.grafo.outgoingEdgesOf(b)) {
+			for(DefaultWeightedEdge e: this.grafo.outgoingEdgesOf(ultimo)) {
 				
-				if(this.grafo.getEdgeWeight(e)>x) {
-					Business bi= Graphs.getOppositeVertex(this.grafo, e, b);
+				if(this.grafo.getEdgeWeight(e)>=x) {
+					Business bi= Graphs.getOppositeVertex(this.grafo, e, ultimo );
 				parziale.add(bi);
-				cerca_ricorsiva(parziale, bi, x);
+				cerca_ricorsiva(parziale, arrivo, x);
 				parziale.remove(parziale.size()-1);
 			}
 			
